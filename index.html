@@ -1,0 +1,1754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MM Supermarket – Fresh Groceries & Medicines</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Lora:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ========== RESET & ROOT ========== */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --blue:       #1a56db;
+  --blue-dark:  #1341b0;
+  --blue-mid:   #3b82f6;
+  --blue-light: #eff6ff;
+  --blue-pale:  #f0f7ff;
+  --sky:        #e0f2fe;
+  --teal:       #0ea5e9;
+  --accent:     #f59e0b;
+  --accent2:    #10b981;
+  --red:        #ef4444;
+  --dark:       #0f1824;
+  --text:       #1e293b;
+  --muted:      #64748b;
+  --border:     #e2e8f0;
+  --white:      #ffffff;
+  --gray-bg:    #f8fafc;
+  --shadow-sm:  0 1px 4px rgba(15,24,36,.06);
+  --shadow:     0 4px 20px rgba(15,24,36,.09);
+  --shadow-lg:  0 12px 40px rgba(15,24,36,.13);
+  --radius:     16px;
+  --radius-sm:  10px;
+  --radius-xs:  6px;
+}
+html { scroll-behavior: smooth; }
+body { font-family: 'Sora', sans-serif; color: var(--text); background: var(--white); overflow-x: hidden; }
+a { text-decoration: none; color: inherit; }
+button { font-family: 'Sora', sans-serif; cursor: pointer; }
+img { max-width: 100%; }
+
+/* ========== PAGE VIEWS ========== */
+.page { display: none; }
+.page.active { display: block; }
+
+/* ========== TOPBAR ========== */
+.topbar {
+  background: linear-gradient(90deg, var(--blue-dark) 0%, var(--blue) 100%);
+  color: #fff;
+  text-align: center;
+  padding: 9px 16px;
+  font-size: 12.5px;
+  letter-spacing: .3px;
+  position: relative;
+  overflow: hidden;
+}
+.topbar::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(90deg, rgba(255,255,255,.03) 0px, rgba(255,255,255,.03) 1px, transparent 1px, transparent 80px);
+}
+.topbar-inner { position: relative; display:flex; align-items:center; justify-content:center; gap:28px; flex-wrap:wrap; }
+.topbar-item { display:flex; align-items:center; gap:6px; opacity:.9; }
+.topbar-item .pill { background:rgba(255,255,255,.2); border-radius:20px; padding:2px 10px; font-size:11px; font-weight:700; }
+
+/* ========== HEADER ========== */
+.header {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 16px rgba(26,86,219,.07);
+}
+.header-inner {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 28px;
+  height: 74px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.logo-wrap { display:flex; align-items:center; gap:11px; flex-shrink:0; }
+.logo-mark {
+  width: 46px; height: 46px;
+  background: linear-gradient(135deg, var(--blue) 0%, var(--teal) 100%);
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px;
+  box-shadow: 0 4px 14px rgba(26,86,219,.3);
+}
+.logo-text .brand { font-family:'Lora',serif; font-weight:700; font-size:19px; color:var(--dark); letter-spacing:-.3px; }
+.logo-text .domain { font-size:11px; color:var(--muted); margin-top:1px; }
+
+.location-pill {
+  display: flex; align-items: center; gap: 7px;
+  background: var(--blue-pale); border: 1.5px solid #bdd7ff;
+  border-radius: 10px; padding: 8px 14px;
+  font-size: 13px; font-weight:500; color:var(--blue);
+  cursor: pointer; flex-shrink:0; transition: all .2s;
+}
+.location-pill:hover { background: var(--sky); }
+
+.search-wrap { flex:1; position:relative; }
+.search-input {
+  width: 100%;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 11px 52px 11px 20px;
+  font-size: 14px;
+  font-family: 'Sora', sans-serif;
+  outline: none;
+  background: var(--gray-bg);
+  color: var(--text);
+  transition: all .2s;
+}
+.search-input:focus { border-color: var(--blue); background: var(--white); box-shadow: 0 0 0 4px rgba(26,86,219,.08); }
+.search-input::placeholder { color: var(--muted); }
+.search-btn {
+  position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+  background: var(--blue); color: white; border: none;
+  border-radius: 9px; width: 38px; height: 38px;
+  font-size: 17px; display:flex; align-items:center; justify-content:center;
+  transition: background .2s;
+}
+.search-btn:hover { background: var(--blue-dark); }
+
+.header-actions { display:flex; align-items:center; gap:10px; flex-shrink:0; }
+.hbtn {
+  display: flex; flex-direction:column; align-items:center; gap:2px;
+  background: none; border: none; font-size:11px; color:var(--muted);
+  padding: 8px 10px; border-radius: 10px; transition: all .2s;
+  position: relative;
+}
+.hbtn:hover { background: var(--blue-pale); color: var(--blue); }
+.hbtn .hicon { font-size:22px; line-height:1; }
+.badge {
+  position: absolute; top:3px; right:3px;
+  background: var(--red); color:white;
+  font-size: 10px; font-weight:700;
+  width: 18px; height: 18px;
+  border-radius: 50%; display:flex; align-items:center; justify-content:center;
+  border: 2px solid white;
+}
+.cart-hbtn {
+  display: flex; align-items:center; gap:9px;
+  background: var(--blue); color: white; border: none;
+  border-radius: 12px; padding: 11px 20px;
+  font-size: 14px; font-weight:600;
+  transition: all .2s; position:relative;
+}
+.cart-hbtn:hover { background: var(--blue-dark); transform: translateY(-1px); box-shadow: var(--shadow); }
+.admin-link {
+  font-size: 12px; font-weight:600; color: var(--muted);
+  border: 1.5px solid var(--border); border-radius: 9px;
+  padding: 8px 14px; transition: all .2s;
+}
+.admin-link:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-pale); }
+
+/* ========== SUBNAV ========== */
+.subnav {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+}
+.subnav-inner {
+  max-width: 1320px; margin: 0 auto; padding: 0 28px;
+  display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none;
+}
+.subnav-inner::-webkit-scrollbar { display: none; }
+.snav {
+  display: flex; align-items:center; gap:6px;
+  padding: 11px 16px; font-size:13.5px; font-weight:500;
+  color: var(--muted); white-space: nowrap;
+  border-bottom: 2.5px solid transparent;
+  background: none; border-left:0; border-right:0; border-top:0;
+  transition: all .2s; cursor: pointer;
+}
+.snav:hover, .snav.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+/* ========== HERO ========== */
+.hero {
+  background: linear-gradient(135deg, #0c2461 0%, #1a56db 55%, #1d8cf8 100%);
+  padding: 64px 28px 0;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -40px; right: -80px;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(255,255,255,.07) 0%, transparent 70%);
+  border-radius: 50%;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: -60px;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(14,165,233,.25) 0%, transparent 70%);
+  border-radius: 50%;
+}
+.hero-inner {
+  max-width: 1320px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 40px; align-items: flex-end;
+  position: relative; z-index:1;
+}
+.hero-tag {
+  display: inline-flex; align-items:center; gap:7px;
+  background: rgba(255,255,255,.15);
+  border: 1px solid rgba(255,255,255,.25);
+  color: white; border-radius: 20px;
+  padding: 6px 16px; font-size: 12.5px; font-weight:600;
+  margin-bottom: 18px;
+  backdrop-filter: blur(6px);
+}
+.hero h1 {
+  font-family: 'Lora', serif;
+  font-size: 50px; font-weight: 700;
+  color: white; line-height: 1.13;
+  margin-bottom: 18px;
+  letter-spacing: -.5px;
+}
+.hero h1 em { font-style:normal; color: #7dd3fc; }
+.hero-desc { color: rgba(255,255,255,.78); font-size:15.5px; line-height:1.65; margin-bottom:28px; max-width:440px; }
+.hero-ctas { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:36px; }
+.btn-white {
+  background: white; color: var(--blue); border: none;
+  border-radius: 12px; padding: 14px 28px;
+  font-size:15px; font-weight:700; font-family:'Sora',sans-serif;
+  transition: all .2s; box-shadow: 0 4px 20px rgba(0,0,0,.15);
+}
+.btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,.2); }
+.btn-ghost {
+  background: rgba(255,255,255,.12);
+  border: 1.5px solid rgba(255,255,255,.35);
+  color: white;
+  border-radius: 12px; padding: 14px 28px;
+  font-size:15px; font-weight:600; font-family:'Sora',sans-serif;
+  backdrop-filter: blur(6px); transition: all .2s;
+}
+.btn-ghost:hover { background: rgba(255,255,255,.2); }
+.hero-stats { display:flex; gap:28px; }
+.hstat { color:white; }
+.hstat-num { font-size:26px; font-weight:800; line-height:1; }
+.hstat-lbl { font-size:11.5px; opacity:.65; margin-top:3px; }
+.hero-right {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 14px; padding-bottom: 30px;
+}
+.hcard {
+  background: rgba(255,255,255,.12);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 18px; padding: 22px 18px;
+  text-align: center; color: white;
+  cursor: pointer; transition: all .3s;
+}
+.hcard:hover { background: rgba(255,255,255,.2); transform: translateY(-4px); }
+.hcard-icon { font-size:44px; margin-bottom:10px; }
+.hcard-name { font-size:13.5px; font-weight:600; margin-bottom:3px; }
+.hcard-price { font-size:12px; color:#7dd3fc; }
+.hcard.wide {
+  grid-column: span 2; display:flex; align-items:center;
+  gap:16px; text-align:left; padding:18px 22px;
+  background: rgba(245,158,11,.2); border-color: rgba(245,158,11,.4);
+}
+.hcard.wide .hcard-icon { font-size:52px; margin-bottom:0; flex-shrink:0; }
+
+/* ========== OFFERS BELT ========== */
+.offers-belt {
+  background: var(--accent); padding: 12px 28px;
+}
+.offers-belt-inner {
+  max-width:1320px; margin:0 auto;
+  display:flex; gap:32px; overflow-x:auto; scrollbar-width:none; align-items:center;
+}
+.offers-belt-inner::-webkit-scrollbar { display:none; }
+.offer-chip { display:flex; align-items:center; gap:8px; white-space:nowrap; color:white; font-size:13px; font-weight:500; }
+.offer-chip .pill2 { background:rgba(255,255,255,.25); border-radius:6px; padding:2px 9px; font-size:11px; font-weight:800; }
+.sep { color:rgba(255,255,255,.5); flex-shrink:0; }
+
+/* ========== SECTION ========== */
+.section { padding: 52px 28px; }
+.section.bg { background: var(--gray-bg); }
+.sec-inner { max-width:1320px; margin:0 auto; }
+.sec-hd { display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:28px; }
+.sec-hd h2 { font-family:'Lora',serif; font-size:26px; font-weight:700; color:var(--dark); }
+.sec-hd p { font-size:13.5px; color:var(--muted); margin-top:4px; }
+.see-all { font-size:13.5px; font-weight:600; color:var(--blue); padding:8px 16px; border:1.5px solid #bdd7ff; border-radius:9px; transition:all .2s; background:none; }
+.see-all:hover { background:var(--blue-pale); }
+
+/* ========== CATEGORIES ========== */
+.cat-grid { display:grid; grid-template-columns:repeat(9,1fr); gap:14px; }
+.cat-card {
+  background: white; border:2px solid var(--border);
+  border-radius: var(--radius); padding: 20px 10px;
+  text-align:center; cursor:pointer;
+  transition: all .25s;
+  box-shadow: var(--shadow-sm);
+}
+.cat-card:hover, .cat-card.sel {
+  border-color: var(--blue);
+  background: var(--blue-pale);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(26,86,219,.12);
+}
+.cat-icon { font-size:34px; margin-bottom:8px; }
+.cat-name { font-size:12px; font-weight:600; color:var(--text); }
+.cat-cnt { font-size:11px; color:var(--muted); margin-top:2px; }
+
+/* ========== PRODUCT GRID ========== */
+.prod-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:18px; }
+.prod-card {
+  background: white; border:1.5px solid var(--border);
+  border-radius: var(--radius); overflow:hidden;
+  box-shadow: var(--shadow-sm);
+  transition: all .25s; cursor:pointer;
+  position: relative;
+}
+.prod-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--blue-mid);
+}
+.prod-img {
+  height: 160px; background: var(--blue-pale);
+  display:flex; align-items:center; justify-content:center;
+  font-size:68px; position:relative;
+}
+.prod-badge {
+  position:absolute; top:10px; left:10px;
+  font-size:10.5px; font-weight:700; border-radius:6px;
+  padding:3px 9px; color:white;
+}
+.prod-badge.sale { background: var(--red); }
+.prod-badge.new-b { background: var(--accent2); }
+.prod-badge.hot { background: var(--accent); }
+.prod-badge.rx { background: var(--blue); }
+.prod-fav {
+  position:absolute; top:10px; right:10px;
+  background:white; border:none; border-radius:50%;
+  width:32px; height:32px; font-size:16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.1);
+  transition: all .2s; display:flex; align-items:center; justify-content:center;
+}
+.prod-fav:hover { transform:scale(1.15); }
+.prod-body { padding:14px; }
+.prod-cat { font-size:10.5px; color:var(--muted); text-transform:uppercase; letter-spacing:.6px; margin-bottom:4px; }
+.prod-name { font-size:13.5px; font-weight:600; line-height:1.35; margin-bottom:3px; color:var(--dark); }
+.prod-wt { font-size:11.5px; color:var(--muted); margin-bottom:10px; }
+.prod-footer { display:flex; align-items:center; justify-content:space-between; gap:6px; }
+.prod-price { font-size:17px; font-weight:800; color:var(--blue-dark); }
+.prod-mrp { font-size:11.5px; color:var(--muted); text-decoration:line-through; }
+.prod-disc { font-size:11px; font-weight:700; color:var(--accent2); }
+.add-btn {
+  background: var(--blue); color:white; border:none;
+  border-radius: 9px; padding: 8px 14px;
+  font-size:12.5px; font-weight:600;
+  transition: all .2s; white-space:nowrap;
+}
+.add-btn:hover { background: var(--blue-dark); }
+.qty-row {
+  display:flex; align-items:center; gap:6px;
+  background: var(--blue-pale); border-radius:9px; padding:4px 8px;
+}
+.qty-row button {
+  background: var(--blue); color:white; border:none;
+  border-radius:7px; width:26px; height:26px;
+  font-size:16px; font-weight:700;
+  display:flex; align-items:center; justify-content:center;
+  transition: background .2s;
+}
+.qty-row button:hover { background: var(--blue-dark); }
+.qty-row span { font-size:14px; font-weight:700; min-width:20px; text-align:center; color:var(--blue-dark); }
+
+/* ========== BANNERS ========== */
+.banner-row { display:grid; grid-template-columns:5fr 3fr 3fr; gap:18px; margin-bottom:52px; }
+.bnr {
+  border-radius:20px; padding:32px 28px;
+  min-height: 200px; display:flex; flex-direction:column; justify-content:flex-end;
+  cursor:pointer; overflow:hidden; position:relative;
+  transition: transform .25s; box-shadow: var(--shadow);
+}
+.bnr:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+.bnr-emoji { font-size:64px; position:absolute; top:18px; right:22px; opacity:.85; }
+.bnr.b1 { background: linear-gradient(135deg, #0c2461, #1a56db); }
+.bnr.b2 { background: linear-gradient(135deg, #065f46, #10b981); }
+.bnr.b3 { background: linear-gradient(135deg, #7c2d12, #f59e0b); }
+.bnr h3 { color:white; font-size:20px; font-weight:700; margin-bottom:6px; font-family:'Lora',serif; }
+.bnr p { color:rgba(255,255,255,.75); font-size:12.5px; margin-bottom:14px; }
+.bnr-cta {
+  align-self:flex-start;
+  background:white; border:none; border-radius:9px;
+  padding:8px 18px; font-size:13px; font-weight:700;
+  font-family:'Sora',sans-serif; transition:all .2s;
+}
+.bnr.b1 .bnr-cta { color:var(--blue); }
+.bnr.b2 .bnr-cta { color:#065f46; }
+.bnr.b3 .bnr-cta { color:#7c2d12; }
+.bnr-cta:hover { transform:scale(1.04); }
+
+/* ========== FEATURES ========== */
+.feat-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:20px; }
+.feat {
+  background: white; border-radius:var(--radius);
+  padding:28px 22px; border:1.5px solid var(--border);
+  text-align:center; transition:all .25s;
+  box-shadow: var(--shadow-sm);
+}
+.feat:hover { border-color:var(--blue); box-shadow:0 6px 24px rgba(26,86,219,.1); transform:translateY(-2px); }
+.feat-ico { font-size:40px; margin-bottom:12px; }
+.feat h3 { font-size:15px; font-weight:700; margin-bottom:6px; }
+.feat p { font-size:13px; color:var(--muted); line-height:1.55; }
+
+/* ========== CART SIDEBAR ========== */
+.overlay {
+  position:fixed; inset:0; background:rgba(15,24,36,.5);
+  z-index:200; display:none; opacity:0; transition:opacity .3s;
+  backdrop-filter: blur(3px);
+}
+.overlay.on { display:block; opacity:1; }
+.cart-drawer {
+  position:fixed; right:0; top:0; bottom:0; width:440px;
+  background:white; z-index:201;
+  transform:translateX(100%); transition:transform .3s cubic-bezier(.4,0,.2,1);
+  display:flex; flex-direction:column;
+  box-shadow: -8px 0 48px rgba(15,24,36,.18);
+}
+.cart-drawer.on { transform:translateX(0); }
+.cart-head {
+  padding:24px 24px 18px; border-bottom:1px solid var(--border);
+  display:flex; align-items:center; justify-content:space-between;
+}
+.cart-head h2 { font-family:'Lora',serif; font-size:22px; }
+.close-x { background:none; border:none; font-size:22px; color:var(--muted); padding:4px 8px; border-radius:8px; transition:all .2s; }
+.close-x:hover { background:var(--gray-bg); color:var(--text); }
+.cart-body { flex:1; overflow-y:auto; padding:16px 24px; }
+.cart-empty { text-align:center; padding:70px 20px; }
+.cart-empty-ico { font-size:64px; margin-bottom:16px; opacity:.5; }
+.cart-empty p { color:var(--muted); font-size:14.5px; line-height:1.6; }
+.citem {
+  display:flex; gap:14px; padding:16px 0;
+  border-bottom:1px solid var(--border); align-items:center;
+}
+.citem-img {
+  width:64px; height:64px; background:var(--blue-pale);
+  border-radius:12px; display:flex; align-items:center;
+  justify-content:center; font-size:34px; flex-shrink:0;
+}
+.citem-info { flex:1; min-width:0; }
+.citem-name { font-size:13.5px; font-weight:600; color:var(--dark); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.citem-wt { font-size:11.5px; color:var(--muted); margin-top:2px; }
+.citem-price { font-size:15px; font-weight:800; color:var(--blue-dark); margin-top:6px; }
+.citem-del { background:none; border:none; color:var(--red); font-size:18px; padding:4px; border-radius:6px; flex-shrink:0; transition:all .2s; }
+.citem-del:hover { background:#fef2f2; }
+.cart-foot {
+  padding:20px 24px;
+  border-top:2px solid var(--border);
+  background:white;
+}
+.summary-row { display:flex; justify-content:space-between; font-size:13.5px; color:var(--muted); margin-bottom:8px; }
+.summary-row.total { font-size:18px; font-weight:800; color:var(--dark); border-top:1.5px solid var(--border); padding-top:12px; margin-top:4px; }
+.checkout-btn {
+  width:100%; background: linear-gradient(90deg, var(--blue-dark), var(--blue));
+  color:white; border:none; border-radius:14px;
+  padding:15px; font-size:15.5px; font-weight:700;
+  font-family:'Sora',sans-serif;
+  transition:all .2s; margin-top:14px;
+  box-shadow: 0 4px 16px rgba(26,86,219,.3);
+}
+.checkout-btn:hover { transform:translateY(-1px); box-shadow: 0 6px 24px rgba(26,86,219,.4); }
+
+/* ========== MODALS ========== */
+.modal-wrap {
+  position:fixed; inset:0; background:rgba(15,24,36,.6);
+  z-index:300; display:none; align-items:center;
+  justify-content:center; padding:24px;
+  backdrop-filter:blur(4px);
+}
+.modal-wrap.on { display:flex; }
+.modal {
+  background:white; border-radius:22px;
+  width:100%; max-width:460px; padding:36px;
+  animation: mIn .3s cubic-bezier(.4,0,.2,1);
+  box-shadow: 0 24px 80px rgba(15,24,36,.2);
+}
+@keyframes mIn { from { opacity:0; transform:scale(.95) translateY(20px); } to { opacity:1; transform:scale(1) translateY(0); } }
+.modal-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px; }
+.modal h2 { font-family:'Lora',serif; font-size:26px; }
+.modal-sub { color:var(--muted); font-size:13.5px; margin-bottom:26px; }
+.fgrp { margin-bottom:16px; }
+.fgrp label { display:block; font-size:12.5px; font-weight:600; color:var(--text); margin-bottom:6px; }
+.finput {
+  width:100%; border:2px solid var(--border); border-radius:10px;
+  padding:12px 16px; font-size:14px;
+  font-family:'Sora',sans-serif; outline:none; transition:all .2s;
+  color:var(--text); background:var(--gray-bg);
+}
+.finput:focus { border-color:var(--blue); background:white; box-shadow:0 0 0 4px rgba(26,86,219,.08); }
+.modal-btn {
+  width:100%; background: linear-gradient(90deg, var(--blue-dark), var(--blue));
+  color:white; border:none; border-radius:11px;
+  padding:14px; font-size:15px; font-weight:700;
+  font-family:'Sora',sans-serif; margin-top:6px;
+  transition:all .2s; box-shadow:0 4px 14px rgba(26,86,219,.25);
+}
+.modal-btn:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(26,86,219,.35); }
+.toggle-txt { text-align:center; margin-top:16px; font-size:13px; color:var(--muted); }
+.toggle-txt a { color:var(--blue); font-weight:600; cursor:pointer; }
+.divider { display:flex; align-items:center; gap:12px; margin:16px 0; }
+.divider hr { flex:1; border:none; border-top:1px solid var(--border); }
+.divider span { font-size:12px; color:var(--muted); }
+
+/* ========== ORDER TRACKING ========== */
+.track-wrap { max-width:700px; margin:0 auto; }
+.track-box {
+  background:white; border-radius:var(--radius);
+  border:1.5px solid var(--border); padding:32px;
+  box-shadow:var(--shadow);
+}
+.track-box h3 { font-family:'Lora',serif; font-size:22px; margin-bottom:20px; }
+.track-input-row { display:flex; gap:12px; margin-bottom:24px; }
+.track-steps { margin-top:10px; }
+.tstep {
+  display:flex; gap:16px; align-items:flex-start;
+  padding:14px 0; position:relative;
+}
+.tstep:not(:last-child)::after {
+  content:'';
+  position:absolute; left:17px; top:44px;
+  width:2px; height:calc(100% - 8px);
+  background:var(--border);
+}
+.tstep.done::after { background:var(--blue); }
+.tstep-dot {
+  width:36px; height:36px; border-radius:50%;
+  background:var(--border); color:var(--muted);
+  display:flex; align-items:center; justify-content:center;
+  font-size:17px; flex-shrink:0; z-index:1;
+  transition:all .3s;
+}
+.tstep.done .tstep-dot { background:var(--blue); color:white; box-shadow:0 4px 14px rgba(26,86,219,.3); }
+.tstep.active .tstep-dot { background:var(--accent); color:white; box-shadow:0 4px 14px rgba(245,158,11,.3); }
+.tstep-info { padding-top:6px; }
+.tstep-title { font-size:14px; font-weight:700; color:var(--dark); }
+.tstep-sub { font-size:12.5px; color:var(--muted); margin-top:2px; }
+
+/* ========== TOAST ========== */
+.toast {
+  position:fixed; bottom:28px; left:50%;
+  transform:translateX(-50%) translateY(80px);
+  background:var(--dark); color:white;
+  border-radius:14px; padding:14px 24px;
+  font-size:14px; font-weight:500; z-index:999;
+  transition:transform .35s cubic-bezier(.4,0,.2,1);
+  display:flex; align-items:center; gap:9px;
+  box-shadow:0 12px 40px rgba(0,0,0,.25);
+  white-space:nowrap;
+}
+.toast.on { transform:translateX(-50%) translateY(0); }
+
+/* ===================== ADMIN PANEL ===================== */
+.admin-layout { display:flex; min-height:100vh; }
+.admin-sidebar {
+  width:260px; background:linear-gradient(160deg, #0c2461 0%, #1a56db 100%);
+  flex-shrink:0; position:fixed; top:0; left:0; bottom:0;
+  display:flex; flex-direction:column; z-index:50;
+}
+.adm-logo {
+  padding:24px 22px; border-bottom:1px solid rgba(255,255,255,.15);
+  display:flex; align-items:center; gap:11px;
+}
+.adm-logo .logo-mark { background:rgba(255,255,255,.15); box-shadow:none; }
+.adm-logo .brand { color:white; font-size:16px; }
+.adm-logo .domain { color:rgba(255,255,255,.5); }
+.admin-nav { flex:1; padding:16px 12px; overflow-y:auto; }
+.adm-nav-title { font-size:10.5px; text-transform:uppercase; letter-spacing:1px; color:rgba(255,255,255,.4); padding:12px 10px 6px; font-weight:600; }
+.adm-link {
+  display:flex; align-items:center; gap:11px;
+  padding:11px 14px; border-radius:11px; margin-bottom:2px;
+  font-size:13.5px; font-weight:500; color:rgba(255,255,255,.75);
+  background:none; border:none; width:100%; text-align:left;
+  cursor:pointer; transition:all .2s;
+}
+.adm-link:hover { background:rgba(255,255,255,.12); color:white; }
+.adm-link.sel { background:rgba(255,255,255,.18); color:white; font-weight:600; }
+.adm-link .nico { font-size:18px; }
+.adm-sidebar-foot {
+  padding:16px 12px; border-top:1px solid rgba(255,255,255,.15);
+}
+.adm-user {
+  display:flex; align-items:center; gap:11px;
+  padding:12px; border-radius:11px; background:rgba(255,255,255,.1);
+}
+.adm-avatar { width:38px; height:38px; background:rgba(255,255,255,.2); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; }
+.adm-user-info .name { font-size:13px; font-weight:600; color:white; }
+.adm-user-info .role { font-size:11px; color:rgba(255,255,255,.55); }
+
+.admin-main { margin-left:260px; flex:1; background:var(--gray-bg); min-height:100vh; }
+.admin-topbar {
+  background:white; border-bottom:1px solid var(--border);
+  padding:0 32px; height:66px;
+  display:flex; align-items:center; justify-content:space-between;
+  position:sticky; top:0; z-index:40;
+  box-shadow:0 2px 12px rgba(0,0,0,.05);
+}
+.admin-topbar h1 { font-family:'Lora',serif; font-size:22px; color:var(--dark); }
+.adm-topbar-right { display:flex; align-items:center; gap:12px; }
+.front-btn {
+  display:flex; align-items:center; gap:7px;
+  background:var(--blue-pale); color:var(--blue);
+  border:1.5px solid #bdd7ff; border-radius:10px;
+  padding:8px 16px; font-size:13px; font-weight:600;
+  font-family:'Sora',sans-serif; transition:all .2s;
+}
+.front-btn:hover { background:var(--sky); }
+.admin-content { padding:32px; }
+
+/* ===== DASHBOARD STATS ===== */
+.stat-row { display:grid; grid-template-columns:repeat(4,1fr); gap:18px; margin-bottom:28px; }
+.stat-card {
+  background:white; border-radius:var(--radius); padding:22px 20px;
+  border:1.5px solid var(--border); box-shadow:var(--shadow-sm);
+  display:flex; align-items:center; gap:16px;
+}
+.stat-card:hover { box-shadow:var(--shadow); }
+.stat-ico {
+  width:52px; height:52px; border-radius:14px;
+  display:flex; align-items:center; justify-content:center; font-size:26px; flex-shrink:0;
+}
+.stat-ico.blue { background:var(--blue-pale); }
+.stat-ico.green { background:#ecfdf5; }
+.stat-ico.amber { background:#fffbeb; }
+.stat-ico.red { background:#fef2f2; }
+.stat-card-info .stat-lbl { font-size:12.5px; color:var(--muted); margin-bottom:4px; }
+.stat-card-info .stat-num { font-size:26px; font-weight:800; color:var(--dark); line-height:1; }
+.stat-card-info .stat-sub { font-size:12px; color:var(--accent2); margin-top:4px; font-weight:600; }
+
+/* ===== TABLES ===== */
+.card {
+  background:white; border-radius:var(--radius);
+  border:1.5px solid var(--border); box-shadow:var(--shadow-sm);
+  overflow:hidden;
+}
+.card-head {
+  padding:20px 24px; border-bottom:1px solid var(--border);
+  display:flex; align-items:center; justify-content:space-between;
+}
+.card-head h3 { font-size:16px; font-weight:700; color:var(--dark); }
+.blue-btn {
+  background:var(--blue); color:white; border:none;
+  border-radius:9px; padding:9px 18px;
+  font-size:13px; font-weight:600;
+  font-family:'Sora',sans-serif; transition:all .2s;
+  display:flex; align-items:center; gap:7px;
+}
+.blue-btn:hover { background:var(--blue-dark); }
+table { width:100%; border-collapse:collapse; }
+thead th {
+  background:var(--gray-bg); padding:12px 18px;
+  font-size:11.5px; font-weight:700; text-transform:uppercase;
+  letter-spacing:.5px; color:var(--muted); text-align:left;
+  border-bottom:1px solid var(--border);
+}
+tbody td {
+  padding:14px 18px; font-size:13.5px;
+  border-bottom:1px solid var(--border); color:var(--text);
+}
+tbody tr:hover td { background:var(--blue-pale); }
+tbody tr:last-child td { border-bottom:none; }
+.status-pill {
+  display:inline-flex; align-items:center; gap:5px;
+  border-radius:20px; padding:4px 12px;
+  font-size:11.5px; font-weight:700;
+}
+.sp-pending { background:#fffbeb; color:#b45309; }
+.sp-processing { background:#eff6ff; color:var(--blue); }
+.sp-delivered { background:#ecfdf5; color:#059669; }
+.sp-cancelled { background:#fef2f2; color:var(--red); }
+.tbl-action {
+  background:none; border:1.5px solid var(--border);
+  border-radius:7px; padding:5px 12px;
+  font-size:12px; font-weight:600; color:var(--muted);
+  cursor:pointer; transition:all .2s;
+}
+.tbl-action:hover { border-color:var(--blue); color:var(--blue); background:var(--blue-pale); }
+.tbl-action.red:hover { border-color:var(--red); color:var(--red); background:#fef2f2; }
+
+/* ===== PRODUCT FORM ===== */
+.prod-form-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.fgrp-full { grid-column:span 2; }
+.fselect {
+  width:100%; border:2px solid var(--border); border-radius:10px;
+  padding:12px 16px; font-size:14px;
+  font-family:'Sora',sans-serif; outline:none; background:var(--gray-bg);
+  color:var(--text); transition:all .2s;
+}
+.fselect:focus { border-color:var(--blue); background:white; }
+.ftarea {
+  width:100%; border:2px solid var(--border); border-radius:10px;
+  padding:12px 16px; font-size:14px;
+  font-family:'Sora',sans-serif; outline:none; background:var(--gray-bg);
+  color:var(--text); resize:vertical; min-height:80px; transition:all .2s;
+}
+.ftarea:focus { border-color:var(--blue); background:white; }
+.img-upload-box {
+  border:2px dashed var(--border); border-radius:12px;
+  padding:32px; text-align:center; cursor:pointer;
+  transition:all .2s; background:var(--gray-bg);
+}
+.img-upload-box:hover { border-color:var(--blue); background:var(--blue-pale); }
+.img-upload-box .icu { font-size:36px; margin-bottom:8px; }
+.img-upload-box p { font-size:13.5px; color:var(--muted); }
+.form-actions { display:flex; gap:12px; justify-content:flex-end; margin-top:8px; }
+.cancel-btn {
+  background:none; border:2px solid var(--border); border-radius:10px;
+  padding:11px 24px; font-size:14px; font-weight:600; color:var(--muted);
+  font-family:'Sora',sans-serif; transition:all .2s;
+}
+.cancel-btn:hover { border-color:var(--text); color:var(--text); }
+.save-btn {
+  background:linear-gradient(90deg, var(--blue-dark), var(--blue));
+  color:white; border:none; border-radius:10px;
+  padding:11px 28px; font-size:14px; font-weight:700;
+  font-family:'Sora',sans-serif; transition:all .2s;
+  box-shadow:0 4px 14px rgba(26,86,219,.25);
+}
+.save-btn:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(26,86,219,.35); }
+
+/* ===== ORDER DETAIL ===== */
+.order-detail {
+  display:grid; grid-template-columns:1fr 280px; gap:20px;
+}
+.detail-row { display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--border); font-size:13.5px; }
+.detail-row:last-child { border:none; }
+.detail-row .lbl { color:var(--muted); }
+.detail-row .val { font-weight:600; color:var(--dark); }
+
+/* ===== ADMIN SECTIONS (hidden/shown) ===== */
+.adm-sec { display:none; }
+.adm-sec.on { display:block; }
+
+/* ===== FOOTER ===== */
+footer {
+  background: linear-gradient(160deg, #0c2461 0%, #1341b0 100%);
+  color:white; padding:52px 28px 24px;
+}
+.footer-inner { max-width:1320px; margin:0 auto; }
+.footer-grid { display:grid; grid-template-columns:2.2fr 1fr 1fr 1fr; gap:48px; margin-bottom:44px; }
+.foot-brand p { color:rgba(255,255,255,.6); font-size:13.5px; line-height:1.65; margin:14px 0 20px; }
+.socials { display:flex; gap:10px; }
+.soc { width:38px; height:38px; border-radius:10px; background:rgba(255,255,255,.1); display:flex; align-items:center; justify-content:center; font-size:18px; cursor:pointer; transition:all .2s; }
+.soc:hover { background:var(--blue); }
+.footer-grid h4 { font-size:14px; font-weight:700; margin-bottom:16px; font-family:'Sora',sans-serif; }
+.footer-grid ul { list-style:none; }
+.footer-grid ul li { margin-bottom:10px; }
+.footer-grid ul li a { color:rgba(255,255,255,.6); font-size:13.5px; transition:color .2s; }
+.footer-grid ul li a:hover { color:white; }
+.footer-bot {
+  border-top:1px solid rgba(255,255,255,.12);
+  padding-top:22px; display:flex;
+  justify-content:space-between; align-items:center;
+}
+.footer-bot p { color:rgba(255,255,255,.4); font-size:13px; }
+.pay-badges { display:flex; gap:8px; }
+.pbadge { background:rgba(255,255,255,.12); border-radius:7px; padding:6px 12px; font-size:12px; color:rgba(255,255,255,.7); font-weight:700; }
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:1100px) {
+  .prod-grid { grid-template-columns:repeat(3,1fr); }
+  .cat-grid { grid-template-columns:repeat(5,1fr); }
+  .footer-grid { grid-template-columns:1fr 1fr; }
+  .banner-row { grid-template-columns:1fr; }
+}
+@media(max-width:768px) {
+  .prod-grid { grid-template-columns:repeat(2,1fr); }
+  .hero-inner { grid-template-columns:1fr; }
+  .hero-right { display:none; }
+  .feat-grid { grid-template-columns:1fr 1fr; }
+  .stat-row { grid-template-columns:1fr 1fr; }
+  .cart-drawer { width:100%; }
+  .admin-sidebar { display:none; }
+  .admin-main { margin-left:0; }
+}
+</style>
+</head>
+<body>
+
+<!-- ==================== CUSTOMER PAGE ==================== -->
+<div id="storePage" class="page active">
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="topbar-item"><span class="pill">FREE</span> Delivery above ₹499</div>
+      <div class="topbar-item">🕐 Delivery in 2 Hours</div>
+      <div class="topbar-item"><span class="pill">10% OFF</span> Code: <strong>MMFRESH10</strong></div>
+      <div class="topbar-item">💊 Medicines available with prescription</div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo-wrap">
+        <div class="logo-mark">🛒</div>
+        <div class="logo-text">
+          <div class="brand">MM Supermarket</div>
+          <div class="domain">mmsupermarket.in</div>
+        </div>
+      </div>
+      <button class="location-pill" onclick="toast('📍 Delivery available across Prayagraj!')">📍 Prayagraj, UP ▾</button>
+      <div class="search-wrap">
+        <input class="search-input" id="searchQ" type="text" placeholder="Search groceries, medicines, dairy…" oninput="searchProducts()">
+        <button class="search-btn">🔍</button>
+      </div>
+      <div class="header-actions">
+        <button class="hbtn" onclick="openLogin()">
+          <span class="hicon">👤</span><span>Account</span>
+        </button>
+        <button class="hbtn" onclick="toast('❤️ Wishlist – coming soon!')">
+          <span class="hicon">❤️</span><span>Wishlist</span>
+        </button>
+        <button class="hbtn" onclick="showTrack()">
+          <span class="hicon">📦</span><span>Orders</span>
+        </button>
+        <button class="cart-hbtn" onclick="openCart()">
+          🛒 Cart &nbsp;<span id="cartBadge">0</span>
+        </button>
+        <button class="admin-link" onclick="showAdmin()">⚙ Admin</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Subnav -->
+  <nav class="subnav">
+    <div class="subnav-inner">
+      <button class="snav active" onclick="catFilter('all',this)">🏠 All</button>
+      <button class="snav" onclick="catFilter('fruits',this)">🍎 Fruits & Vegetables</button>
+      <button class="snav" onclick="catFilter('dairy',this)">🥛 Dairy & Eggs</button>
+      <button class="snav" onclick="catFilter('staples',this)">🌾 Staples & Grains</button>
+      <button class="snav" onclick="catFilter('snacks',this)">🍪 Snacks & Beverages</button>
+      <button class="snav" onclick="catFilter('bakery',this)">🍞 Bakery</button>
+      <button class="snav" onclick="catFilter('personal',this)">🧴 Personal Care</button>
+      <button class="snav" onclick="catFilter('household',this)">🧹 Household</button>
+      <button class="snav" onclick="catFilter('medicine',this)">💊 Medicines</button>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-left">
+        <div class="hero-tag">⚡ Prayagraj's Fastest Grocery Delivery</div>
+        <h1>Fresh <em>Groceries</em><br>& Medicines,<br>Delivered Fast</h1>
+        <p class="hero-desc">Shop 5,000+ products — farm-fresh vegetables, dairy, daily staples, and pharmacy essentials. Delivered to your door in as little as 2 hours.</p>
+        <div class="hero-ctas">
+          <button class="btn-white" onclick="document.getElementById('prodSec').scrollIntoView({behavior:'smooth'})">Shop Now →</button>
+          <button class="btn-ghost" onclick="catFilter('medicine', document.querySelector('.snav:last-child'))">Order Medicine 💊</button>
+        </div>
+        <div class="hero-stats">
+          <div class="hstat"><div class="hstat-num">5000+</div><div class="hstat-lbl">Products</div></div>
+          <div class="hstat"><div class="hstat-num">2hr</div><div class="hstat-lbl">Delivery</div></div>
+          <div class="hstat"><div class="hstat-num">50K+</div><div class="hstat-lbl">Customers</div></div>
+          <div class="hstat"><div class="hstat-num">4.8★</div><div class="hstat-lbl">Rating</div></div>
+        </div>
+      </div>
+      <div class="hero-right">
+        <div class="hcard wide">
+          <div class="hcard-icon">🥦</div>
+          <div>
+            <div class="hcard-name">Farm-Fresh Vegetables</div>
+            <div class="hcard-price">Starting ₹19/250g — sourced daily from local farms</div>
+          </div>
+        </div>
+        <div class="hcard"><div class="hcard-icon">🍎</div><div class="hcard-name">Seasonal Fruits</div><div class="hcard-price">from ₹49</div></div>
+        <div class="hcard"><div class="hcard-icon">🥛</div><div class="hcard-name">Fresh Dairy</div><div class="hcard-price">from ₹28</div></div>
+        <div class="hcard"><div class="hcard-icon">💊</div><div class="hcard-name">Medicines</div><div class="hcard-price">Upload Rx</div></div>
+        <div class="hcard"><div class="hcard-icon">🌾</div><div class="hcard-name">Staples</div><div class="hcard-price">Bulk deals</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Offers Belt -->
+  <div class="offers-belt">
+    <div class="offers-belt-inner">
+      <div class="offer-chip"><span class="pill2">NEW</span> 🚚 Free delivery on orders ₹499+</div>
+      <div class="sep">•</div>
+      <div class="offer-chip"><span class="pill2">10% OFF</span> Use MMFRESH10</div>
+      <div class="sep">•</div>
+      <div class="offer-chip"><span class="pill2">DAILY</span> ⏰ Flash sale 12 PM sharp</div>
+      <div class="sep">•</div>
+      <div class="offer-chip"><span class="pill2">DEAL</span> Buy 2 Get 1 Free on snacks</div>
+      <div class="sep">•</div>
+      <div class="offer-chip"><span class="pill2">RX</span> 💊 Upload prescription for medicines</div>
+    </div>
+  </div>
+
+  <!-- Categories -->
+  <section class="section">
+    <div class="sec-inner">
+      <div class="sec-hd">
+        <div><h2>Shop by Category</h2><p>Everything you need, organised for you</p></div>
+        <button class="see-all">View All →</button>
+      </div>
+      <div class="cat-grid">
+        <div class="cat-card" onclick="catFilter('fruits',null)"><div class="cat-icon">🍎</div><div class="cat-name">Fruits & Vegs</div><div class="cat-cnt">120+ items</div></div>
+        <div class="cat-card" onclick="catFilter('dairy',null)"><div class="cat-icon">🥛</div><div class="cat-name">Dairy & Eggs</div><div class="cat-cnt">80+ items</div></div>
+        <div class="cat-card" onclick="catFilter('staples',null)"><div class="cat-icon">🌾</div><div class="cat-name">Staples</div><div class="cat-cnt">200+ items</div></div>
+        <div class="cat-card" onclick="catFilter('snacks',null)"><div class="cat-icon">🍪</div><div class="cat-name">Snacks</div><div class="cat-cnt">150+ items</div></div>
+        <div class="cat-card" onclick="catFilter('snacks',null)"><div class="cat-icon">🥤</div><div class="cat-name">Beverages</div><div class="cat-cnt">90+ items</div></div>
+        <div class="cat-card" onclick="catFilter('bakery',null)"><div class="cat-icon">🍞</div><div class="cat-name">Bakery</div><div class="cat-cnt">60+ items</div></div>
+        <div class="cat-card" onclick="catFilter('personal',null)"><div class="cat-icon">🧴</div><div class="cat-name">Personal Care</div><div class="cat-cnt">180+ items</div></div>
+        <div class="cat-card" onclick="catFilter('household',null)"><div class="cat-icon">🧹</div><div class="cat-name">Household</div><div class="cat-cnt">140+ items</div></div>
+        <div class="cat-card" onclick="catFilter('medicine',null)"><div class="cat-icon">💊</div><div class="cat-name">Medicines</div><div class="cat-cnt">500+ items</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Promo Banners -->
+  <div class="sec-inner" style="padding:0 28px;max-width:1320px;margin:0 auto 0;">
+    <div class="banner-row">
+      <div class="bnr b1" onclick="catFilter('fruits',null)">
+        <div class="bnr-emoji">🥦</div>
+        <h3>Farm-Fresh<br>Vegetables Daily</h3>
+        <p>Hand-picked, delivered within 24hrs of harvest</p>
+        <button class="bnr-cta">Shop Vegetables</button>
+      </div>
+      <div class="bnr b2" onclick="catFilter('medicine',null)">
+        <div class="bnr-emoji">💊</div>
+        <h3>Medicines<br>at Best Prices</h3>
+        <p>Upload prescription, get doorstep delivery</p>
+        <button class="bnr-cta">Order Medicines</button>
+      </div>
+      <div class="bnr b3" onclick="catFilter('snacks',null)">
+        <div class="bnr-emoji">🍪</div>
+        <h3>Snacks Deal<br>Buy 2 Get 1</h3>
+        <p>Limited time offer — today only!</p>
+        <button class="bnr-cta">Grab Deal</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Products -->
+  <section class="section" id="prodSec">
+    <div class="sec-inner">
+      <div class="sec-hd">
+        <div><h2 id="prodHeading">Featured Products</h2><p id="prodSub">Best sellers across all categories</p></div>
+        <button class="see-all">View All →</button>
+      </div>
+      <div class="prod-grid" id="prodGrid"></div>
+    </div>
+  </section>
+
+  <!-- Why Us -->
+  <section class="section bg">
+    <div class="sec-inner">
+      <div class="sec-hd"><div><h2>Why MM Supermarket?</h2><p>Trusted by 50,000+ families in Prayagraj</p></div></div>
+      <div class="feat-grid">
+        <div class="feat"><div class="feat-ico">🚚</div><h3>2-Hour Delivery</h3><p>Lightning-fast delivery across Prayagraj. Free on all orders above ₹499.</p></div>
+        <div class="feat"><div class="feat-ico">✅</div><h3>100% Fresh</h3><p>Farm-to-door freshness guaranteed. Full refund if you're not satisfied.</p></div>
+        <div class="feat"><div class="feat-ico">💊</div><h3>Medicines Available</h3><p>OTC medicines plus prescription delivery. Upload your Rx and we handle the rest.</p></div>
+        <div class="feat"><div class="feat-ico">🔒</div><h3>Secure Payments</h3><p>UPI, Cards, Net Banking, and Cash on Delivery — all 100% encrypted.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="foot-brand">
+          <div class="logo-wrap" style="margin-bottom:2px;">
+            <div class="logo-mark" style="background:rgba(255,255,255,.15);">🛒</div>
+            <div class="logo-text"><div class="brand" style="color:white;font-size:19px;">MM Supermarket</div><div class="domain" style="color:rgba(255,255,255,.5);">mmsupermarket.in</div></div>
+          </div>
+          <p>Your trusted online supermarket for fresh groceries, daily essentials & medicines — delivered right to your door across Prayagraj.</p>
+          <div class="socials">
+            <div class="soc" onclick="toast('Facebook coming soon!')">📘</div>
+            <div class="soc" onclick="toast('Instagram coming soon!')">📸</div>
+            <div class="soc" onclick="toast('WhatsApp Business coming soon!')">💬</div>
+            <div class="soc" onclick="toast('YouTube coming soon!')">▶️</div>
+          </div>
+        </div>
+        <div>
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#" onclick="catFilter('fruits',null)">Fruits & Vegetables</a></li>
+            <li><a href="#" onclick="catFilter('medicine',null)">Medicines</a></li>
+            <li><a href="#" onclick="showTrack()">Track Order</a></li>
+            <li><a href="#">Offers & Deals</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Help</h4>
+          <ul>
+            <li><a href="#">FAQs</a></li>
+            <li><a href="#">Return Policy</a></li>
+            <li><a href="#">Shipping Policy</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Use</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Contact Us</h4>
+          <ul>
+            <li><a href="#">📞 +91 98765 43210</a></li>
+            <li><a href="#">✉️ hello@mmsupermarket.in</a></li>
+            <li><a href="#">📍 Prayagraj, Uttar Pradesh</a></li>
+            <li><a href="#">🕘 Open: 8 AM – 10 PM</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bot">
+        <p>© 2025 MM Supermarket. All rights reserved.</p>
+        <div class="pay-badges">
+          <div class="pbadge">UPI</div>
+          <div class="pbadge">VISA</div>
+          <div class="pbadge">MC</div>
+          <div class="pbadge">PayTM</div>
+          <div class="pbadge">COD</div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</div><!-- /storePage -->
+
+<!-- ==================== ADMIN PAGE ==================== -->
+<div id="adminPage" class="page">
+  <div class="admin-layout">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="adm-logo">
+        <div class="logo-mark">🛒</div>
+        <div class="logo-text"><div class="brand">MM Admin</div><div class="domain">mmsupermarket.in</div></div>
+      </div>
+      <nav class="admin-nav">
+        <div class="adm-nav-title">Overview</div>
+        <button class="adm-link sel" onclick="admShow('dashboard',this)"><span class="nico">📊</span> Dashboard</button>
+        <div class="adm-nav-title">Store</div>
+        <button class="adm-link" onclick="admShow('products',this)"><span class="nico">📦</span> Products</button>
+        <button class="adm-link" onclick="admShow('add-product',this)"><span class="nico">➕</span> Add Product</button>
+        <button class="adm-link" onclick="admShow('orders',this)"><span class="nico">🛒</span> Orders</button>
+        <button class="adm-link" onclick="admShow('customers',this)"><span class="nico">👥</span> Customers</button>
+        <div class="adm-nav-title">Tools</div>
+        <button class="adm-link" onclick="admShow('inventory',this)"><span class="nico">📋</span> Inventory</button>
+        <button class="adm-link" onclick="admShow('reports',this)"><span class="nico">📈</span> Reports</button>
+        <button class="adm-link" onclick="admShow('settings',this)"><span class="nico">⚙️</span> Settings</button>
+      </nav>
+      <div class="adm-sidebar-foot">
+        <div class="adm-user">
+          <div class="adm-avatar">👤</div>
+          <div class="adm-user-info"><div class="name">MM Admin</div><div class="role">Store Manager</div></div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="admin-main">
+      <div class="admin-topbar">
+        <h1 id="admTitle">Dashboard</h1>
+        <div class="adm-topbar-right">
+          <button class="front-btn" onclick="showStore()">🏪 View Store</button>
+          <button class="blue-btn" onclick="admShow('add-product', document.querySelector('.adm-link:nth-child(5)'))">+ Add Product</button>
+        </div>
+      </div>
+
+      <div class="admin-content">
+
+        <!-- DASHBOARD -->
+        <div class="adm-sec on" id="sec-dashboard">
+          <div class="stat-row">
+            <div class="stat-card"><div class="stat-ico blue">📦</div><div class="stat-card-info"><div class="stat-lbl">Total Orders Today</div><div class="stat-num">48</div><div class="stat-sub">↑ 12% vs yesterday</div></div></div>
+            <div class="stat-card"><div class="stat-ico green">💰</div><div class="stat-card-info"><div class="stat-lbl">Revenue Today</div><div class="stat-num">₹18,420</div><div class="stat-sub">↑ 8% vs yesterday</div></div></div>
+            <div class="stat-card"><div class="stat-ico amber">👥</div><div class="stat-card-info"><div class="stat-lbl">Active Customers</div><div class="stat-num">1,284</div><div class="stat-sub">↑ 3% this week</div></div></div>
+            <div class="stat-card"><div class="stat-ico red">⚠️</div><div class="stat-card-info"><div class="stat-lbl">Low Stock Items</div><div class="stat-num">7</div><div class="stat-sub" style="color:var(--red);">Needs attention</div></div></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>Recent Orders</h3><button class="blue-btn" onclick="admShow('orders',null)">View All Orders</button></div>
+            <table>
+              <thead><tr><th>Order ID</th><th>Customer</th><th>Items</th><th>Total</th><th>Status</th><th>Time</th><th>Action</th></tr></thead>
+              <tbody id="dashOrderTbl"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- PRODUCTS LIST -->
+        <div class="adm-sec" id="sec-products">
+          <div class="card">
+            <div class="card-head">
+              <h3>All Products (<span id="prodCount">0</span>)</h3>
+              <button class="blue-btn" onclick="admShow('add-product',null)">+ Add New Product</button>
+            </div>
+            <table>
+              <thead><tr><th>Product</th><th>Category</th><th>Price</th><th>MRP</th><th>Stock</th><th>Status</th><th>Actions</th></tr></thead>
+              <tbody id="admProdTbl"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ADD PRODUCT -->
+        <div class="adm-sec" id="sec-add-product">
+          <div class="card">
+            <div class="card-head"><h3>Add / Edit Product</h3></div>
+            <div style="padding:28px;">
+              <div class="prod-form-grid">
+                <div class="fgrp fgrp-full"><label>Product Name</label><input class="finput" id="fp-name" placeholder="e.g. Fresh Tomatoes – Grade A"></div>
+                <div class="fgrp"><label>Category</label>
+                  <select class="fselect" id="fp-cat">
+                    <option value="fruits">Fruits & Vegetables</option>
+                    <option value="dairy">Dairy & Eggs</option>
+                    <option value="staples">Staples & Grains</option>
+                    <option value="snacks">Snacks & Beverages</option>
+                    <option value="bakery">Bakery</option>
+                    <option value="personal">Personal Care</option>
+                    <option value="household">Household</option>
+                    <option value="medicine">Medicines</option>
+                  </select>
+                </div>
+                <div class="fgrp"><label>Weight / Unit</label><input class="finput" id="fp-wt" placeholder="e.g. 500g, 1kg, 6 pcs"></div>
+                <div class="fgrp"><label>Selling Price (₹)</label><input class="finput" type="number" id="fp-price" placeholder="0"></div>
+                <div class="fgrp"><label>MRP (₹)</label><input class="finput" type="number" id="fp-mrp" placeholder="0"></div>
+                <div class="fgrp"><label>Stock Quantity</label><input class="finput" type="number" id="fp-stock" placeholder="0"></div>
+                <div class="fgrp"><label>Badge</label>
+                  <select class="fselect" id="fp-badge">
+                    <option value="">None</option>
+                    <option value="sale">SALE</option>
+                    <option value="new-b">NEW</option>
+                    <option value="hot">HOT</option>
+                    <option value="rx">Rx Required</option>
+                  </select>
+                </div>
+                <div class="fgrp"><label>Emoji Icon</label><input class="finput" id="fp-emoji" placeholder="e.g. 🍅"></div>
+                <div class="fgrp fgrp-full"><label>Description</label><textarea class="ftarea" id="fp-desc" placeholder="Brief product description…"></textarea></div>
+                <div class="fgrp fgrp-full">
+                  <label>Product Image</label>
+                  <div class="img-upload-box" onclick="toast('Image upload – connect to your server!')">
+                    <div class="icu">📷</div>
+                    <p>Click to upload product image<br><small>PNG, JPG up to 5MB</small></p>
+                  </div>
+                </div>
+              </div>
+              <div class="form-actions">
+                <button class="cancel-btn" onclick="admShow('products',null)">Cancel</button>
+                <button class="save-btn" onclick="saveProduct()">💾 Save Product</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ORDERS -->
+        <div class="adm-sec" id="sec-orders">
+          <div style="display:flex;gap:12px;margin-bottom:18px;flex-wrap:wrap;">
+            <button class="blue-btn" onclick="filterOrders('all',this)" style="background:var(--blue)">All Orders</button>
+            <button class="blue-btn" onclick="filterOrders('pending',this)" style="background:#b45309">Pending</button>
+            <button class="blue-btn" onclick="filterOrders('processing',this)" style="background:var(--teal)">Processing</button>
+            <button class="blue-btn" onclick="filterOrders('delivered',this)" style="background:var(--accent2)">Delivered</button>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>All Orders</h3><button class="blue-btn" onclick="toast('Exporting orders to CSV…')">📥 Export CSV</button></div>
+            <table>
+              <thead><tr><th>Order ID</th><th>Customer</th><th>Phone</th><th>Address</th><th>Total</th><th>Payment</th><th>Status</th><th>Actions</th></tr></thead>
+              <tbody id="allOrderTbl"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- CUSTOMERS -->
+        <div class="adm-sec" id="sec-customers">
+          <div class="card">
+            <div class="card-head"><h3>Customer List</h3><button class="blue-btn" onclick="toast('Exporting customer data…')">📥 Export</button></div>
+            <table>
+              <thead><tr><th>Name</th><th>Phone</th><th>Email</th><th>Orders</th><th>Total Spent</th><th>Joined</th><th>Action</th></tr></thead>
+              <tbody id="custTbl"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- INVENTORY -->
+        <div class="adm-sec" id="sec-inventory">
+          <div class="card">
+            <div class="card-head"><h3>Inventory Status</h3><button class="blue-btn" onclick="toast('Downloading inventory report…')">📥 Report</button></div>
+            <table>
+              <thead><tr><th>Product</th><th>Category</th><th>In Stock</th><th>Min Stock</th><th>Status</th><th>Action</th></tr></thead>
+              <tbody id="invTbl"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- REPORTS -->
+        <div class="adm-sec" id="sec-reports">
+          <div class="stat-row">
+            <div class="stat-card"><div class="stat-ico blue">📅</div><div class="stat-card-info"><div class="stat-lbl">This Month Revenue</div><div class="stat-num">₹4,82,300</div><div class="stat-sub">↑ 18% vs last month</div></div></div>
+            <div class="stat-card"><div class="stat-ico green">📦</div><div class="stat-card-info"><div class="stat-lbl">Total Orders (Month)</div><div class="stat-num">1,420</div><div class="stat-sub">↑ 11% vs last month</div></div></div>
+            <div class="stat-card"><div class="stat-ico amber">🛒</div><div class="stat-card-info"><div class="stat-lbl">Avg Order Value</div><div class="stat-num">₹339</div><div class="stat-sub">↑ 6% vs last month</div></div></div>
+            <div class="stat-card"><div class="stat-ico red">↩️</div><div class="stat-card-info"><div class="stat-lbl">Return Rate</div><div class="stat-num">1.2%</div><div class="stat-sub" style="color:var(--accent2)">Below industry avg</div></div></div>
+          </div>
+          <div class="card" style="padding:28px;">
+            <h3 style="margin-bottom:16px;">Top Selling Categories (This Month)</h3>
+            <div id="chartBars"></div>
+          </div>
+        </div>
+
+        <!-- SETTINGS -->
+        <div class="adm-sec" id="sec-settings">
+          <div class="card" style="padding:28px;max-width:640px;">
+            <h3 style="margin-bottom:24px;">Store Settings</h3>
+            <div class="fgrp"><label>Store Name</label><input class="finput" value="MM Supermarket"></div>
+            <div class="fgrp"><label>Domain</label><input class="finput" value="www.mmsupermarket.in"></div>
+            <div class="fgrp"><label>Contact Phone</label><input class="finput" value="+91 98765 43210"></div>
+            <div class="fgrp"><label>Contact Email</label><input class="finput" value="hello@mmsupermarket.in"></div>
+            <div class="fgrp"><label>Store Address</label><textarea class="ftarea" style="min-height:60px">Prayagraj, Uttar Pradesh, India</textarea></div>
+            <div class="fgrp"><label>Minimum Order Value (₹)</label><input class="finput" type="number" value="199"></div>
+            <div class="fgrp"><label>Free Delivery Above (₹)</label><input class="finput" type="number" value="499"></div>
+            <div class="form-actions"><button class="save-btn" onclick="toast('✅ Settings saved!')">Save Settings</button></div>
+          </div>
+        </div>
+
+      </div><!-- /admin-content -->
+    </main>
+  </div>
+</div><!-- /adminPage -->
+
+<!-- ==================== ORDER TRACKING MODAL ==================== -->
+<div class="modal-wrap" id="trackModal">
+  <div class="modal" style="max-width:600px;">
+    <div class="modal-top">
+      <h2>📦 Track Your Order</h2>
+      <button class="close-x" onclick="closeModal('trackModal')">✕</button>
+    </div>
+    <p class="modal-sub">Enter your Order ID or phone number to track your delivery</p>
+    <div class="track-input-row">
+      <input class="finput" id="trackInput" placeholder="e.g. ORD-20250001 or phone number" style="flex:1">
+      <button class="modal-btn" style="width:auto;padding:12px 24px;" onclick="doTrack()">Track →</button>
+    </div>
+    <div id="trackResult" style="display:none">
+      <div class="track-box">
+        <h3>Order #ORD-20250042</h3>
+        <p style="color:var(--muted);font-size:13px;margin-bottom:18px;">Placed on 28 Feb 2025 · 3 items · ₹487</p>
+        <div class="track-steps">
+          <div class="tstep done"><div class="tstep-dot">✓</div><div class="tstep-info"><div class="tstep-title">Order Confirmed</div><div class="tstep-sub">Your order was placed and confirmed — 10:30 AM</div></div></div>
+          <div class="tstep done"><div class="tstep-dot">✓</div><div class="tstep-info"><div class="tstep-title">Order Packed</div><div class="tstep-sub">Items picked and packed at the warehouse — 11:05 AM</div></div></div>
+          <div class="tstep active"><div class="tstep-dot">🚚</div><div class="tstep-info"><div class="tstep-title">Out for Delivery</div><div class="tstep-sub">Delivery partner Ravi Kumar is on the way — ETA 12:30 PM</div></div></div>
+          <div class="tstep"><div class="tstep-dot">🏠</div><div class="tstep-info"><div class="tstep-title">Delivered</div><div class="tstep-sub">Pending</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== LOGIN / REGISTER MODAL ==================== -->
+<div class="modal-wrap" id="loginModal">
+  <div class="modal">
+    <div class="modal-top">
+      <h2 id="mTitle">Welcome Back!</h2>
+      <button class="close-x" onclick="closeModal('loginModal')">✕</button>
+    </div>
+    <p class="modal-sub" id="mSub">Login to your MM Supermarket account</p>
+    <div id="loginF">
+      <div class="fgrp"><label>Phone / Email</label><input class="finput" placeholder="+91 or email"></div>
+      <div class="fgrp"><label>Password</label><input class="finput" type="password" placeholder="••••••••"></div>
+      <button class="modal-btn" onclick="doLogin()">Login →</button>
+      <div class="divider"><hr><span>or continue with</span><hr></div>
+      <button class="modal-btn" style="background:white;color:var(--text);border:2px solid var(--border);box-shadow:none;" onclick="toast('📱 OTP login coming soon!')">📱 Login with OTP</button>
+      <div class="toggle-txt">New here? <a onclick="switchReg()">Create an account</a></div>
+    </div>
+    <div id="regF" style="display:none">
+      <div class="prod-form-grid">
+        <div class="fgrp"><label>Full Name</label><input class="finput" placeholder="Your name"></div>
+        <div class="fgrp"><label>Phone</label><input class="finput" type="tel" placeholder="+91 XXXXX XXXXX"></div>
+        <div class="fgrp fgrp-full"><label>Email</label><input class="finput" type="email" placeholder="you@email.com"></div>
+        <div class="fgrp fgrp-full"><label>Password</label><input class="finput" type="password" placeholder="Min 8 characters"></div>
+      </div>
+      <button class="modal-btn" onclick="doRegister()">Create Account →</button>
+      <div class="toggle-txt">Already registered? <a onclick="switchLogin()">Login here</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== CHECKOUT MODAL ==================== -->
+<div class="modal-wrap" id="checkoutModal">
+  <div class="modal" style="max-width:520px">
+    <div class="modal-top">
+      <h2>🛒 Checkout</h2>
+      <button class="close-x" onclick="closeModal('checkoutModal')">✕</button>
+    </div>
+    <p class="modal-sub">Complete your delivery details</p>
+    <div class="prod-form-grid">
+      <div class="fgrp"><label>Full Name</label><input class="finput" id="co-name" placeholder="Your name"></div>
+      <div class="fgrp"><label>Phone</label><input class="finput" id="co-phone" placeholder="+91 XXXXX XXXXX"></div>
+      <div class="fgrp fgrp-full"><label>Delivery Address</label><textarea class="ftarea" id="co-addr" style="min-height:60px" placeholder="House no., Street, Area, Prayagraj"></textarea></div>
+      <div class="fgrp"><label>Pincode</label><input class="finput" id="co-pin" placeholder="211001"></div>
+      <div class="fgrp"><label>Payment</label>
+        <select class="fselect" id="co-pay">
+          <option>Cash on Delivery</option>
+          <option>UPI (GPay / PhonePe)</option>
+          <option>Credit / Debit Card</option>
+          <option>Net Banking</option>
+          <option>PayTM Wallet</option>
+        </select>
+      </div>
+    </div>
+    <div style="background:var(--blue-pale);border-radius:12px;padding:16px;margin:16px 0;font-size:14px;">
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span>Subtotal</span><span id="co-sub">₹0</span></div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span>Delivery</span><span id="co-del">₹40</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:16px;font-weight:800;color:var(--blue-dark);border-top:1px solid var(--border);padding-top:8px;margin-top:8px;"><span>Total</span><span id="co-total">₹0</span></div>
+    </div>
+    <button class="modal-btn" onclick="placeOrder()">Place Order ✅</button>
+  </div>
+</div>
+
+<!-- ==================== CART DRAWER ==================== -->
+<div class="overlay" id="cartOverlay" onclick="closeCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-head">
+    <h2>🛒 Your Cart</h2>
+    <button class="close-x" onclick="closeCart()">✕</button>
+  </div>
+  <div class="cart-body" id="cartBody">
+    <div class="cart-empty">
+      <div class="cart-empty-ico">🛒</div>
+      <p>Your cart is empty.<br>Add fresh groceries or medicines!</p>
+    </div>
+  </div>
+  <div id="cartFoot" style="display:none" class="cart-foot">
+    <div class="summary-row"><span>Subtotal</span><span id="cs-sub">₹0</span></div>
+    <div class="summary-row"><span>Delivery</span><span id="cs-del">₹40</span></div>
+    <div class="summary-row"><span>Discount (10%)</span><span id="cs-disc" style="color:var(--accent2)">-₹0</span></div>
+    <div class="summary-row total"><span>Total</span><span id="cs-total">₹0</span></div>
+    <button class="checkout-btn" onclick="openCheckout()">Proceed to Checkout →</button>
+  </div>
+</div>
+
+<!-- ==================== TOAST ==================== -->
+<div class="toast" id="toastEl">✅ Done!</div>
+
+<!-- ==================== SCRIPTS ==================== -->
+<script>
+// ===== DATA =====
+let products = [
+  {id:1,name:'Fresh Tomatoes',cat:'fruits',wt:'500g',price:29,mrp:45,disc:35,emoji:'🍅',badge:'sale',stock:120},
+  {id:2,name:'Red Onions Premium',cat:'fruits',wt:'1kg',price:35,mrp:50,disc:30,emoji:'🧅',badge:'hot',stock:200},
+  {id:3,name:'Banana (Dozen)',cat:'fruits',wt:'12 pcs',price:49,mrp:60,disc:18,emoji:'🍌',badge:'',stock:80},
+  {id:4,name:'Fresh Spinach',cat:'fruits',wt:'250g',price:19,mrp:30,disc:37,emoji:'🥬',badge:'new-b',stock:60},
+  {id:5,name:'Amul Full Cream Milk',cat:'dairy',wt:'1L',price:68,mrp:72,disc:6,emoji:'🥛',badge:'',stock:150},
+  {id:6,name:'Farm Fresh Eggs',cat:'dairy',wt:'12 eggs',price:89,mrp:100,disc:11,emoji:'🥚',badge:'new-b',stock:90},
+  {id:7,name:'Amul Butter',cat:'dairy',wt:'500g',price:245,mrp:280,disc:13,emoji:'🧈',badge:'',stock:55},
+  {id:8,name:'Britannia Brown Bread',cat:'bakery',wt:'400g',price:42,mrp:50,disc:16,emoji:'🍞',badge:'',stock:70},
+  {id:9,name:'Parle-G Biscuits',cat:'snacks',wt:'800g',price:55,mrp:65,disc:15,emoji:'🍪',badge:'hot',stock:300},
+  {id:10,name:"Lay's Classic Chips",cat:'snacks',wt:'108g',price:30,mrp:35,disc:14,emoji:'🥔',badge:'',stock:180},
+  {id:11,name:'Tata Tea Premium',cat:'snacks',wt:'500g',price:245,mrp:280,disc:13,emoji:'🍵',badge:'',stock:95},
+  {id:12,name:'Basmati Rice',cat:'staples',wt:'5kg',price:349,mrp:420,disc:17,emoji:'🌾',badge:'sale',stock:40},
+  {id:13,name:'Toor Dal',cat:'staples',wt:'1kg',price:135,mrp:155,disc:13,emoji:'🫘',badge:'',stock:120},
+  {id:14,name:'Sunflower Oil',cat:'staples',wt:'1L',price:145,mrp:175,disc:17,emoji:'🌻',badge:'',stock:85},
+  {id:15,name:'Dove Body Wash',cat:'personal',wt:'200ml',price:199,mrp:249,disc:20,emoji:'🧴',badge:'sale',stock:65},
+  {id:16,name:'Colgate Toothpaste',cat:'personal',wt:'300g',price:115,mrp:140,disc:18,emoji:'🦷',badge:'',stock:110},
+  {id:17,name:'Surf Excel Detergent',cat:'household',wt:'2kg',price:380,mrp:440,disc:14,emoji:'🧼',badge:'',stock:50},
+  {id:18,name:'Harpic Toilet Cleaner',cat:'household',wt:'1L',price:145,mrp:175,disc:17,emoji:'🧹',badge:'',stock:75},
+  {id:19,name:'Maggi Noodles',cat:'snacks',wt:'420g',price:68,mrp:80,disc:15,emoji:'🍜',badge:'hot',stock:200},
+  {id:20,name:'Paracetamol 500mg',cat:'medicine',wt:'Strip of 10',price:18,mrp:22,disc:18,emoji:'💊',badge:'rx',stock:500},
+  {id:21,name:'Vicks VapoRub',cat:'medicine',wt:'25g',price:89,mrp:99,disc:10,emoji:'💆',badge:'',stock:120},
+  {id:22,name:'Dettol Hand Wash',cat:'personal',wt:'250ml',price:75,mrp:90,disc:17,emoji:'🧼',badge:'sale',stock:95},
+  {id:23,name:'Aashirvaad Atta',cat:'staples',wt:'5kg',price:280,mrp:320,disc:13,emoji:'🌿',badge:'',stock:60},
+  {id:24,name:'Coca-Cola 2L',cat:'snacks',wt:'2L',price:98,mrp:115,disc:15,emoji:'🥤',badge:'',stock:140},
+];
+
+const sampleOrders = [
+  {id:'ORD-20250048',cust:'Ramesh Kumar',phone:'9876543210',addr:'Civil Lines, Prayagraj',items:3,total:487,payment:'COD',status:'processing',time:'2h ago'},
+  {id:'ORD-20250047',cust:'Priya Sharma',phone:'9876501234',addr:'Kydganj, Prayagraj',items:5,total:1240,payment:'UPI',status:'delivered',time:'4h ago'},
+  {id:'ORD-20250046',cust:'Amit Verma',phone:'9871234560',addr:'Tagore Town, Prayagraj',items:2,total:210,payment:'COD',status:'pending',time:'5h ago'},
+  {id:'ORD-20250045',cust:'Sunita Tiwari',phone:'9850001234',addr:'George Town, Prayagraj',items:8,total:2340,payment:'Card',status:'delivered',time:'6h ago'},
+  {id:'ORD-20250044',cust:'Raj Singh',phone:'9890123456',addr:'Allahpur, Prayagraj',items:4,total:678,payment:'UPI',status:'processing',time:'7h ago'},
+];
+
+const sampleCustomers = [
+  {name:'Ramesh Kumar',phone:'9876543210',email:'ramesh@email.com',orders:12,spent:'₹8,430',joined:'Jan 2025'},
+  {name:'Priya Sharma',phone:'9876501234',email:'priya@email.com',orders:8,spent:'₹5,200',joined:'Feb 2025'},
+  {name:'Amit Verma',phone:'9871234560',email:'amit@email.com',orders:5,spent:'₹2,100',joined:'Dec 2024'},
+  {name:'Sunita Tiwari',phone:'9850001234',email:'sunita@email.com',orders:20,spent:'₹14,800',joined:'Oct 2024'},
+];
+
+let cart = {};
+let nextProdId = 25;
+
+// ===== PAGE TOGGLE =====
+function showAdmin() { document.getElementById('storePage').classList.remove('active'); document.getElementById('adminPage').classList.add('active'); renderAdminAll(); }
+function showStore() { document.getElementById('adminPage').classList.remove('active'); document.getElementById('storePage').classList.add('active'); }
+
+// ===== ADMIN SECTIONS =====
+function admShow(id, btn) {
+  document.querySelectorAll('.adm-sec').forEach(s=>s.classList.remove('on'));
+  document.getElementById('sec-'+id)?.classList.add('on');
+  document.querySelectorAll('.adm-link').forEach(l=>l.classList.remove('sel'));
+  if(btn) btn.classList.add('sel');
+  const titles = {dashboard:'Dashboard',products:'Products',['add-product']:'Add Product',orders:'Orders',customers:'Customers',inventory:'Inventory',reports:'Reports',settings:'Settings'};
+  document.getElementById('admTitle').textContent = titles[id]||id;
+  if(id==='products') renderAdminProds();
+  if(id==='orders') renderAllOrders();
+  if(id==='customers') renderCustomers();
+  if(id==='inventory') renderInventory();
+  if(id==='reports') renderChart();
+}
+
+function renderAdminAll() {
+  renderDashOrders();
+  renderAdminProds();
+  renderAllOrders();
+  renderCustomers();
+  renderInventory();
+  renderChart();
+}
+
+function renderDashOrders() {
+  const t = sampleOrders.slice(0,5);
+  document.getElementById('dashOrderTbl').innerHTML = t.map(o=>`
+    <tr>
+      <td><strong>${o.id}</strong></td>
+      <td>${o.cust}</td>
+      <td>${o.items} items</td>
+      <td><strong>₹${o.total}</strong></td>
+      <td><span class="status-pill sp-${o.status}">${statusDot(o.status)} ${cap(o.status)}</span></td>
+      <td>${o.time}</td>
+      <td><button class="tbl-action" onclick="toast('Opening ${o.id} details…')">View</button></td>
+    </tr>`).join('');
+}
+
+function renderAdminProds() {
+  document.getElementById('prodCount').textContent = products.length;
+  document.getElementById('admProdTbl').innerHTML = products.map(p=>`
+    <tr>
+      <td>${p.emoji} <strong>${p.name}</strong></td>
+      <td>${catLabel(p.cat)}</td>
+      <td><strong>₹${p.price}</strong></td>
+      <td>₹${p.mrp}</td>
+      <td>${p.stock}</td>
+      <td><span class="status-pill ${p.stock>20?'sp-delivered':'sp-cancelled'}">${p.stock>20?'✅ In Stock':'⚠️ Low Stock'}</span></td>
+      <td style="display:flex;gap:6px;">
+        <button class="tbl-action" onclick="editProd(${p.id})">✏️ Edit</button>
+        <button class="tbl-action red" onclick="deleteProd(${p.id})">🗑</button>
+      </td>
+    </tr>`).join('');
+}
+
+function renderAllOrders() {
+  document.getElementById('allOrderTbl').innerHTML = sampleOrders.map(o=>`
+    <tr>
+      <td><strong>${o.id}</strong></td>
+      <td>${o.cust}</td>
+      <td>${o.phone}</td>
+      <td style="max-width:140px;overflow:hidden;text-overflow:ellipsis">${o.addr}</td>
+      <td><strong>₹${o.total}</strong></td>
+      <td>${o.payment}</td>
+      <td>
+        <select class="fselect" style="padding:5px 8px;font-size:12px;width:auto;" onchange="updateOrderStatus('${o.id}',this.value)">
+          <option ${o.status=='pending'?'selected':''}>pending</option>
+          <option ${o.status=='processing'?'selected':''}>processing</option>
+          <option ${o.status=='delivered'?'selected':''}>delivered</option>
+          <option ${o.status=='cancelled'?'selected':''}>cancelled</option>
+        </select>
+      </td>
+      <td><button class="tbl-action" onclick="toast('Order ${o.id} details coming soon!')">View</button></td>
+    </tr>`).join('');
+}
+
+function renderCustomers() {
+  document.getElementById('custTbl').innerHTML = sampleCustomers.map(c=>`
+    <tr>
+      <td><strong>${c.name}</strong></td>
+      <td>${c.phone}</td>
+      <td>${c.email}</td>
+      <td>${c.orders}</td>
+      <td><strong>${c.spent}</strong></td>
+      <td>${c.joined}</td>
+      <td><button class="tbl-action" onclick="toast('Customer profile for ${c.name}')">View</button></td>
+    </tr>`).join('');
+}
+
+function renderInventory() {
+  document.getElementById('invTbl').innerHTML = products.map(p=>`
+    <tr>
+      <td>${p.emoji} <strong>${p.name}</strong></td>
+      <td>${catLabel(p.cat)}</td>
+      <td>${p.stock}</td>
+      <td>20</td>
+      <td><span class="status-pill ${p.stock>20?'sp-delivered':p.stock>5?'sp-pending':'sp-cancelled'}">${p.stock>20?'✅ Good':p.stock>5?'⚠️ Low':'🔴 Critical'}</span></td>
+      <td><button class="tbl-action" onclick="toast('Restocking ${p.name}…')">Restock</button></td>
+    </tr>`).join('');
+}
+
+function renderChart() {
+  const cats = [{name:'Fruits & Vegs',pct:92},{name:'Dairy',pct:78},{name:'Staples',pct:65},{name:'Snacks',pct:58},{name:'Medicines',pct:45},{name:'Personal Care',pct:38},{name:'Household',pct:30},{name:'Bakery',pct:24}];
+  document.getElementById('chartBars').innerHTML = cats.map(c=>`
+    <div style="margin-bottom:14px;">
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px;">
+        <span style="font-weight:600">${c.name}</span><span style="color:var(--muted)">${c.pct}%</span>
+      </div>
+      <div style="background:var(--border);border-radius:8px;height:10px;">
+        <div style="background:linear-gradient(90deg,var(--blue-dark),var(--blue));height:100%;border-radius:8px;width:${c.pct}%;transition:width .6s ease;"></div>
+      </div>
+    </div>`).join('');
+}
+
+function saveProduct() {
+  const name = document.getElementById('fp-name').value.trim();
+  const cat = document.getElementById('fp-cat').value;
+  const wt = document.getElementById('fp-wt').value.trim();
+  const price = parseInt(document.getElementById('fp-price').value)||0;
+  const mrp = parseInt(document.getElementById('fp-mrp').value)||0;
+  const stock = parseInt(document.getElementById('fp-stock').value)||0;
+  const badge = document.getElementById('fp-badge').value;
+  const emoji = document.getElementById('fp-emoji').value.trim()||'📦';
+  if(!name||!price){ toast('⚠️ Please fill Product Name and Price'); return; }
+  const disc = mrp>price ? Math.round((mrp-price)/mrp*100) : 0;
+  products.push({id:nextProdId++,name,cat,wt,price,mrp,disc,emoji,badge,stock});
+  ['fp-name','fp-wt','fp-price','fp-mrp','fp-stock','fp-emoji'].forEach(id=>document.getElementById(id).value='');
+  toast('✅ Product "'+name+'" added successfully!');
+  renderProducts(products);
+  admShow('products', null);
+}
+
+function editProd(id) {
+  const p = products.find(x=>x.id===id);
+  if(!p) return;
+  document.getElementById('fp-name').value = p.name;
+  document.getElementById('fp-cat').value = p.cat;
+  document.getElementById('fp-wt').value = p.wt;
+  document.getElementById('fp-price').value = p.price;
+  document.getElementById('fp-mrp').value = p.mrp;
+  document.getElementById('fp-stock').value = p.stock;
+  document.getElementById('fp-emoji').value = p.emoji;
+  document.getElementById('fp-badge').value = p.badge;
+  admShow('add-product', null);
+}
+
+function deleteProd(id) {
+  products = products.filter(p=>p.id!==id);
+  renderAdminProds();
+  renderProducts(products);
+  toast('🗑 Product deleted.');
+}
+
+function updateOrderStatus(id, val) {
+  const o = sampleOrders.find(x=>x.id===id);
+  if(o) { o.status=val; toast('✅ Order '+id+' status → '+val); }
+}
+
+function filterOrders(status, btn) {
+  toast('Filtering orders: '+(status==='all'?'All':status));
+}
+
+// ===== PRODUCTS RENDER =====
+function renderProducts(list) {
+  const g = document.getElementById('prodGrid');
+  if(!list.length) {
+    g.innerHTML = '<div style="grid-column:span 5;text-align:center;padding:48px;color:var(--muted)">No products found. Try another search!</div>';
+    return;
+  }
+  g.innerHTML = list.map(p=>`
+    <div class="prod-card">
+      <div class="prod-img">
+        ${p.badge?`<div class="prod-badge ${p.badge}">${badgeLabel(p.badge)}</div>`:''}
+        <span style="pointer-events:none">${p.emoji}</span>
+        <button class="prod-fav" onclick="toast('❤️ Added to wishlist!')">♡</button>
+      </div>
+      <div class="prod-body">
+        <div class="prod-cat">${catLabel(p.cat)}</div>
+        <div class="prod-name">${p.name}</div>
+        <div class="prod-wt">${p.wt}</div>
+        <div class="prod-footer">
+          <div>
+            <div class="prod-price">₹${p.price}</div>
+            <div style="display:flex;gap:6px;align-items:center;margin-top:2px">
+              <span class="prod-mrp">₹${p.mrp}</span>
+              ${p.disc?`<span class="prod-disc">${p.disc}% off</span>`:''}
+            </div>
+          </div>
+          <div id="pb-${p.id}">${renderCartCtrl(p.id)}</div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function renderCartCtrl(id) {
+  if(cart[id]) return `<div class="qty-row">
+    <button onclick="chQty(${id},-1)">−</button>
+    <span>${cart[id]}</span>
+    <button onclick="chQty(${id},1)">+</button>
+  </div>`;
+  return `<button class="add-btn" onclick="addCart(${id})">+ Add</button>`;
+}
+
+function badgeLabel(b) { return {sale:'SALE','new-b':'NEW',hot:'HOT',rx:'Rx'}[b]||b; }
+function catLabel(c) { return {fruits:'Fruits & Vegs',dairy:'Dairy',staples:'Staples',snacks:'Snacks',bakery:'Bakery',personal:'Personal Care',household:'Household',medicine:'Medicine'}[c]||c; }
+function statusDot(s) { return {pending:'🟡',processing:'🔵',delivered:'🟢',cancelled:'🔴'}[s]||'⚪'; }
+function cap(s) { return s.charAt(0).toUpperCase()+s.slice(1); }
+
+function catFilter(cat, btn) {
+  document.querySelectorAll('.snav').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  const filtered = cat==='all' ? products : products.filter(p=>p.cat===cat);
+  const names = {all:'All Products',fruits:'Fruits & Vegetables',dairy:'Dairy & Eggs',staples:'Staples & Grains',snacks:'Snacks & Beverages',bakery:'Bakery',personal:'Personal Care',household:'Household',medicine:'Medicines'};
+  document.getElementById('prodHeading').textContent = names[cat]||'Products';
+  document.getElementById('prodSub').textContent = filtered.length+' products';
+  renderProducts(filtered);
+  document.getElementById('prodSec').scrollIntoView({behavior:'smooth'});
+}
+
+function searchProducts() {
+  const q = document.getElementById('searchQ').value.toLowerCase();
+  const filtered = products.filter(p=>p.name.toLowerCase().includes(q)||p.cat.includes(q));
+  renderProducts(filtered);
+  if(q) { document.getElementById('prodHeading').textContent = 'Search Results'; document.getElementById('prodSub').textContent = filtered.length+' results for "'+q+'"'; }
+}
+
+// ===== CART =====
+function addCart(id) {
+  cart[id] = (cart[id]||0)+1;
+  updateCartCount();
+  refreshCtrl(id);
+  const p = products.find(x=>x.id===id);
+  toast('✅ '+p.emoji+' '+p.name+' added to cart!');
+}
+
+function chQty(id, d) {
+  cart[id] = Math.max(0,(cart[id]||0)+d);
+  if(!cart[id]) delete cart[id];
+  updateCartCount();
+  refreshCtrl(id);
+  renderCartBody();
+}
+
+function refreshCtrl(id) {
+  const el = document.getElementById('pb-'+id);
+  if(el) el.innerHTML = renderCartCtrl(id);
+}
+
+function updateCartCount() {
+  const n = Object.values(cart).reduce((a,b)=>a+b,0);
+  document.getElementById('cartBadge').textContent = n;
+}
+
+function renderCartBody() {
+  const keys = Object.keys(cart).map(Number);
+  const body = document.getElementById('cartBody');
+  const foot = document.getElementById('cartFoot');
+  if(!keys.length) {
+    body.innerHTML = '<div class="cart-empty"><div class="cart-empty-ico">🛒</div><p>Your cart is empty.<br>Add groceries or medicines!</p></div>';
+    foot.style.display='none'; return;
+  }
+  let sub = 0;
+  body.innerHTML = keys.map(id=>{
+    const p = products.find(x=>x.id===id);
+    const line = p.price*cart[id];
+    sub += line;
+    return `<div class="citem">
+      <div class="citem-img">${p.emoji}</div>
+      <div class="citem-info">
+        <div class="citem-name">${p.name}</div>
+        <div class="citem-wt">${p.wt}</div>
+        <div class="citem-price">₹${line} <span style="font-weight:400;font-size:11.5px;color:var(--muted)">(${cart[id]} × ₹${p.price})</span></div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;">
+        <button class="citem-del" onclick="removeCart(${id})">🗑</button>
+        <div class="qty-row" style="transform:scale(.9)">
+          <button onclick="chQty(${id},-1)">−</button>
+          <span>${cart[id]}</span>
+          <button onclick="chQty(${id},1)">+</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  const del = sub>=499 ? 0 : 40;
+  const disc = Math.round(sub*.10);
+  const total = sub+del-disc;
+  document.getElementById('cs-sub').textContent='₹'+sub;
+  document.getElementById('cs-del').textContent=del===0?'FREE 🎉':'₹'+del;
+  document.getElementById('cs-disc').textContent='-₹'+disc;
+  document.getElementById('cs-total').textContent='₹'+total;
+  foot.style.display='block';
+}
+
+function removeCart(id) { delete cart[id]; updateCartCount(); refreshCtrl(id); renderCartBody(); }
+
+function openCart() {
+  renderCartBody();
+  document.getElementById('cartOverlay').classList.add('on');
+  document.getElementById('cartDrawer').classList.add('on');
+}
+function closeCart() {
+  document.getElementById('cartOverlay').classList.remove('on');
+  document.getElementById('cartDrawer').classList.remove('on');
+}
+
+function openCheckout() {
+  const keys = Object.keys(cart).map(Number);
+  if(!keys.length){ toast('⚠️ Your cart is empty!'); return; }
+  let sub=0;
+  keys.forEach(id=>{ const p=products.find(x=>x.id===id); sub+=p.price*cart[id]; });
+  const del=sub>=499?0:40, disc=Math.round(sub*.10);
+  document.getElementById('co-sub').textContent='₹'+sub;
+  document.getElementById('co-del').textContent=del===0?'FREE':'₹'+del;
+  document.getElementById('co-total').textContent='₹'+(sub+del-disc);
+  closeCart();
+  document.getElementById('checkoutModal').classList.add('on');
+}
+
+function placeOrder() {
+  const name=document.getElementById('co-name').value.trim();
+  const phone=document.getElementById('co-phone').value.trim();
+  const addr=document.getElementById('co-addr').value.trim();
+  if(!name||!phone||!addr){ toast('⚠️ Please fill all delivery details'); return; }
+  const id='ORD-20250'+String(Math.floor(Math.random()*9000+1000));
+  closeModal('checkoutModal');
+  cart={};
+  updateCartCount();
+  renderProducts(products);
+  toast('🎉 Order '+id+' placed! Delivery in ~2 hours');
+  setTimeout(()=>toast('📱 Order confirmation SMS sent to '+phone),2000);
+}
+
+// ===== MODALS =====
+function openLogin() { document.getElementById('loginModal').classList.add('on'); }
+function closeModal(id) { document.getElementById(id).classList.remove('on'); }
+function switchReg() { document.getElementById('loginF').style.display='none'; document.getElementById('regF').style.display='block'; document.getElementById('mTitle').textContent='Create Account'; document.getElementById('mSub').textContent='Join MM Supermarket today!'; }
+function switchLogin() { document.getElementById('regF').style.display='none'; document.getElementById('loginF').style.display='block'; document.getElementById('mTitle').textContent='Welcome Back!'; document.getElementById('mSub').textContent='Login to your MM Supermarket account'; }
+function doLogin() { closeModal('loginModal'); toast('✅ Logged in successfully! Welcome back.'); }
+function doRegister() { closeModal('loginModal'); toast('🎉 Account created! Welcome to MM Supermarket!'); }
+function showTrack() { document.getElementById('trackModal').classList.add('on'); }
+function doTrack() {
+  const v=document.getElementById('trackInput').value.trim();
+  if(!v){ toast('⚠️ Enter an Order ID or phone number'); return; }
+  document.getElementById('trackResult').style.display='block';
+}
+
+// ===== TOAST =====
+let toastTimer;
+function toast(msg) {
+  const el=document.getElementById('toastEl');
+  el.textContent=msg; el.classList.add('on');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>el.classList.remove('on'),3200);
+}
+
+// ===== INIT =====
+renderProducts(products);
+</script>
+</body>
+</html>
